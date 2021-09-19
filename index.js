@@ -1,11 +1,9 @@
-// function onLoad() {
-//     document.getElementById('customFile')
-// }
 let fileLoaded;
 let fileText;
 let fileName;
 let customName;
 let queryType;
+var fileContentsDict = {};
 
 function loadFile() {
     customName = document.getElementById('userCustomFileName').value;
@@ -23,7 +21,7 @@ function loadFile() {
 }
 
 
-// Add the following code if you want the name of the file appear on select
+// Function used to place selected file name into input field
 $(".custom-file-input").on("change", function(evt) {
     fileName = $(this).val().split("\\").pop();
     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
@@ -41,29 +39,18 @@ function getSelected() {
     }
     return false;
 }
-/* create sniffer */
+// Define function to capture selected text and call backend to analyze that text.
 $(document).ready(function() {
     $('#text-box').mouseup(function(event) {
-        // console.log($(document.getElementById('text-box')).height())
-        // console.log($('text-box').height())
-
         var selection = getSelected();
         selection = $.trim(selection);
         if(selection != ''){
-            // $("span.popup-tag").css("display","block");
-            // $("span.popup-tag").css("top",event.clientY/2);
-            // $("span.popup-tag").css("left",event.clientX/2);
-            // $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width()/2);
-            // $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height()/2);
             sendData(queryType, selection);
-        }else{
-            $("span.popup-tag").css("display","none");
         }
     });
 });
 
-/* Gedeon's Stuff */
-/*Send post request*/
+// Function to send data highlighted or typed by the user.
 function sendData(key, value) {
     var data = new FormData();
     data.append(key, value);
@@ -81,10 +68,7 @@ function sendData(key, value) {
     xhr.send(data);
 }
 
-/*Add file*/ 
-var addBtn = document.getElementById('add-btn');
-var fileContentsDict = {};
- 
+// Function to dynamically add buttons that represent files uploaded by user.
 function addEditBtn() {
     var table = document.getElementById("myTable");
     var row = table.insertRow(-1);
@@ -107,11 +91,10 @@ function addEditBtn() {
     });
 
     remove.setAttribute('class', 'removeBtn');
+    // Add attribute listener to remove button if clicked
     remove.addEventListener('click', function(e) {
-        //Remove filename:filecontents from dictionary
+        // Clear main text pane when user removes that text file.
         document.getElementById('text-box').innerHTML = " ";
-
-        // delete fileContentsDict[e.currentTarget.parentNode.name];
         e.currentTarget.parentNode.remove();
     }, false);
     remove.innerHTML = "X";
@@ -130,22 +113,23 @@ var option2Button = document.getElementById('option2');
 var option3Button = document.getElementById('option3');
 var option4Button = document.getElementById('option4');
 
-option1.addEventListener('click', () => {
+// Define event listeners to select query function requested by the user
+option1Button.addEventListener('click', () => {
     queryType = "summarize"
     clearText()
 }
 );
-option2.addEventListener('click', () => {
+option2Button.addEventListener('click', () => {
     queryType = "elaborate"
     clearText()
 }
 );
-option3.addEventListener('click', () => {
+option3Button.addEventListener('click', () => {
     queryType = "define"
     clearText()
 }
 );
-option4.addEventListener('click', () => {
+option4Button.addEventListener('click', () => {
     queryType = "custom"
     clearText()
 });
