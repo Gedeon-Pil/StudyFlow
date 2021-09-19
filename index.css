@@ -32,6 +32,15 @@ body {
     padding:10px;
     }
 
+.custom-query {
+    overflow: scroll;
+    height: 125px;
+    margin-bottom: 10px;
+}
+
+.custom-query-label {
+    margin-top: 10px;
+}
 
 #text-box {
     background-color: white;

@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="form-table" id="customButtons" style="width: 10%; height: 79%; float: left; background:silver;">
+        <div class="col-2 mx-auto form-table" id="customButtons" style="width: 10%; height: 79%; float: left; background:silver;">
             <table id="myTable"></table>
         </div>
         <div class="col-8 mx-auto">
@@ -64,8 +64,29 @@
                 </label>
                 <br>
                 <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option4" autocomplete="off"> Custom Query
+                    <input type="radio" name="options" id="option4" autocomplete="off" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2"> Custom Query
                 </label>
+            </div>
+            <div class="row">
+                <div class="col mx-auto">
+                    <div class="collapse multi-collapse" id="multiCollapseExample1">
+                        <label class="custom-query-label">Enter Query</label>
+                        <span id="userCustomQuery" class="card card-body custom-query" contentEditable="true">
+                            How far away is Saturn?
+                        </span>
+                        <button class="btn btn-secondary" onclick="submitCustomQuery()">Submit</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            <div class="col mx-auto">
+                    <div class="collapse multi-collapse" id="multiCollapseExample2">
+                        <label class="custom-query-label">Query Result</label>
+                        <span id="resultCustomQuery" class="card card-body custom-query">
+                            Submit a question
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
