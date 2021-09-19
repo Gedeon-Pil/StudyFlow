@@ -17,11 +17,13 @@ class GoogleScraper:
 
     # Constants
     FIRST_LINK_CLASS_NAME = "yuRUbf"
-    DRIVER_WAIT_TIME = 0.2
     MAXIMIZE_FLAG = "--kiosk"
     HEADLESS_FLAG = "--headless"
     GOOGLE_RESULT_CLASS_NAMES = ["Z0LcW XcVN5d", "FLP8od", "IZ6rdc", "zCubwf"]
     GOOGLE_SEARCH_ENDPOINT = "https://www.google.com/search?q="
+
+    DRIVER_WAIT_TIME = 0.2
+    MIN_PARAGRAPH_CHARS = 30
 
 
     def __init__(self, chromeDriverPath=os.path.join(dirname, "chromedriver-macOS"), maximized=True, headless=False):
@@ -48,13 +50,14 @@ class GoogleScraper:
         try:
             print("Checking query against class name " + className)
             foundElem = self.driver.find_element_by_class_name(className)
-            print("Success for class name")
-            allText = ""
-            for elem in foundElem.find_element_by_tag_name("*"):
-                allText += elem.innerHTML
-            print()
+            print("Found elem for class name " + className)
+            allText = foundElem.text
+            for elem in foundElem.find_elements_by_xpath(".//*"):
+                print("Child found")
+                allText += elem.text
             return " ".join(allText.split())
-        except Exception:
+        except Exception as e:
+            print(e)
             return False
 
 
@@ -69,18 +72,24 @@ class GoogleScraper:
             print("Successfully navigated to main article")
             allParagraphs = self.driver.find_elements_by_css_selector("p")
             for par in allParagraphs:
-                if (len(par.text) > 30):
+                if (len(par.text) >= self.MIN_PARAGRAPH_CHARS):
                     textToSummarize += par.text
             print("MADE IT")
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
         return summarizeTextHelper(" ".join(textToSummarize.split()))
 
     def shutDown(self):
         self.driver.quit()
 
+    def getCorrectChromedriverPath(self):
+        pass
 
-googleScraper = GoogleScraper(headless=True)
+    def cleanUpQueryResult(self, text):
+        return ""
+
+
+googleScraper = GoogleScraper(headless=False)
 app = Flask(__name__)
 
 @app.before_first_request
