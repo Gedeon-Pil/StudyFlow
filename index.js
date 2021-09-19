@@ -44,18 +44,18 @@ function getSelected() {
 /* create sniffer */
 $(document).ready(function() {
     $('#text-box').mouseup(function(event) {
-        console.log($(document.getElementById('text-box')).height())
-        console.log($('text-box').height())
+        // console.log($(document.getElementById('text-box')).height())
+        // console.log($('text-box').height())
 
         var selection = getSelected();
         selection = $.trim(selection);
         if(selection != ''){
-            $("span.popup-tag").css("display","block");
-            $("span.popup-tag").css("top",event.clientY/2);
-            $("span.popup-tag").css("left",event.clientX/2);
-            $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width()/2);
-            $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height()/2);
-            sendData(queryType, selection, "span.popup-tag");
+            // $("span.popup-tag").css("display","block");
+            // $("span.popup-tag").css("top",event.clientY/2);
+            // $("span.popup-tag").css("left",event.clientX/2);
+            // $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width()/2);
+            // $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height()/2);
+            sendData(queryType, selection, "span.resultCustomQuery");
         }else{
             $("span.popup-tag").css("display","none");
         }
@@ -75,9 +75,9 @@ function sendData(key, value, id) {
         let response = JSON.parse(this.responseText)
         console.log(this.responseText);
         console.log(response)
-        console.log(response['output'])
+        console.log(response)
 
-        $(id).text(response['output']);
+        $(id).text(response);
     };
     xhr.send(data);
 }
@@ -92,10 +92,10 @@ function addEditBtn() {
     var cellInstruction = row.insertCell(-1);
     var button = document.createElement('button');
     var remove = document.createElement('button');
-    button.setAttribute('class', 'btn btn-secondary');
     button.setAttribute('type', 'button');
     button.innerHTML = customName; // Make the custom name the button name
     button.setAttribute('name', customName);
+    button.setAttribute('class', 'btn btn-secondary fileBtn');
 
     // Add filename: filecontents to dictionary
     fileContentsDict[customName] = fileText;
@@ -103,18 +103,20 @@ function addEditBtn() {
 
     // Add event listener that changes contents in view
     button.addEventListener('click', (event) => {
-        document.getElementById('text-box').innerHTML = fileContentsDict[event.target.name];
+        if(event.target.name != "")
+            document.getElementById('text-box').innerHTML = fileContentsDict[event.target.name];
     });
 
-    remove.setAttribute('style', 'background-color: red');
+    remove.setAttribute('class', 'removeBtn');
     remove.addEventListener('click', function(e) {
         //Remove filename:filecontents from dictionary
-        delete fileContentsDict[e.currentTarget.parentNode.name];
+        document.getElementById('text-box').innerHTML = " ";
+
+        // delete fileContentsDict[e.currentTarget.parentNode.name];
         e.currentTarget.parentNode.remove();
-        document.getElementById('text-box').innerHTML = "";
     }, false);
     remove.innerHTML = "X";
-    button.appendChild(remove);
+    button.prepend(remove);
     cellInstruction.appendChild(button);
 }
 

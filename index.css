@@ -14,27 +14,43 @@
 }
 
 body {
-    background-color: black;
+    background-color: #131145;
 }
 
 .heading {
-    color: #70a870;
+    color: #ee1e79;
     font-size: 48px;
     text-align: center;
+    font-family: 'Source Code Pro', monospace;
 }
 
+h3 {
+    color: #ee1e79;
+    font-size: 20px;
+    text-align: center;
+
+}
+
+
 .heading-div {
-    background-color:black;
+    background-color:#1b1464;
 }
 
 .main-content {
-    background-color:silver;
-    padding:10px;
+    background-color: #f5f7f7;
+    padding-top:10px;
     }
+
+#divider {
+    width: 100%;
+    height: 20px;
+    display: block;
+    background-color: #131145;
+}
 
 .custom-query {
     overflow: scroll;
-    height: 125px;
+    height: 150px;
     margin-bottom: 10px;
 }
 
@@ -47,5 +63,55 @@ body {
     overflow: scroll;
     height: 80vh;
     border:1px solid black;
+    padding:20px;
+
+}
+
+.removeBtn {
+    background-color: #ee1e79;
+    border-radius: 50%;
+    max-width: 50%;
+    overflow: hidden;
+    float: left;
+
+}
+
+.fileBtn {
+    width: 15vw;
+    overflow: hidden;
+}
+
+
+.btn-secondary
+{
+
+    background-color: #1b1464;
+
+    /*color:#131145;*/
+
+    border-color: #1b1464;
+
+}
+
+.btn-btn-secondary:active
+{
+
+    background-color: #1b1464;
+
+    color:#131145;
+
+    border-color: #1b1464;
+
+}
+
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active, .btn-secondary.active, .open .dropdown-toggle.btn-secondary {
+
+
+
+    background-color: #1b1464;
+
+    /*color:#131145;*/
+
+    border-color: #1b1464;
 
 }
