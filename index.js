@@ -55,7 +55,7 @@ $(document).ready(function() {
             // $("span.popup-tag").css("left",event.clientX/2);
             // $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width()/2);
             // $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height()/2);
-            sendData(queryType, selection, "span.resultCustomQuery");
+            sendData(queryType, selection);
         }else{
             $("span.popup-tag").css("display","none");
         }
@@ -64,20 +64,19 @@ $(document).ready(function() {
 
 /* Gedeon's Stuff */
 /*Send post request*/
-function sendData(key, value, id) {
+function sendData(key, value) {
     var data = new FormData();
     data.append(key, value);
-    console.log(data);
+    console.log("Sending request with action: " + key);
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://localhost:5000/query', true);
-    xhr.onload = function () {
-        let response = JSON.parse(this.responseText)
+    xhr.onload = function () 
+    {
+        let response = this.responseText
         console.log(this.responseText);
-        console.log(response)
-        console.log(response)
 
-        $(id).text(response);
+        document.getElementById('resultCustomQuery').innerHTML= response;
     };
     xhr.send(data);
 }
@@ -123,23 +122,35 @@ function addEditBtn() {
 function submitCustomQuery() {
     let selection = document.getElementById("userCustomQuery").innerHTML
     console.log(selection)
-    sendData(queryType, selection, "span.resultCustomQuery")
+    sendData(queryType, selection)
 }
 
 var option1Button = document.getElementById('option1');
-var option1Button = document.getElementById('option2');
-var option1Button = document.getElementById('option3');
-var option1Button = document.getElementById('option4');
+var option2Button = document.getElementById('option2');
+var option3Button = document.getElementById('option3');
+var option4Button = document.getElementById('option4');
 
-option1.addEventListener('click', 
+option1.addEventListener('click', () => {
     queryType = "summarize"
+    clearText()
+}
 );
-option2.addEventListener('click', 
-    queryType = "define"
-);
-option1.addEventListener('click', 
+option2.addEventListener('click', () => {
     queryType = "elaborate"
+    clearText()
+}
 );
-option1.addEventListener('click', 
+option3.addEventListener('click', () => {
+    queryType = "define"
+    clearText()
+}
+);
+option4.addEventListener('click', () => {
     queryType = "custom"
-);
+    clearText()
+});
+
+
+function clearText() {
+    document.getElementById('resultCustomQuery').innerHTML = " ";
+}
