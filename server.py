@@ -86,7 +86,7 @@ class GoogleScraper:
         if self.PLATFORM_NAME == "Darwin":
             return os.path.join(self.DIR_NAME, "chromedriver-macOS")
         elif self.PLATFORM_NAME == "Windows":
-            return os.path.join(self.DIR_NAME, "chromdriver-win64")
+            return os.path.join(self.DIR_NAME, "chromedriver-win64")
         raise Exception("There is only chromedriver support of Mac and Windows")
 
 
