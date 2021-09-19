@@ -55,8 +55,7 @@ $(document).ready(function() {
             $("span.popup-tag").css("left",event.clientX/2);
             $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width()/2);
             $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height()/2);
-            // console.log(sendData(queryType, selection))
-            $("span.popup-tag").text(sendData(queryType, selection)['output']);
+            sendData(queryType, selection, "span.popup-tag");
         }else{
             $("span.popup-tag").css("display","none");
         }
@@ -65,7 +64,7 @@ $(document).ready(function() {
 
 /* Gedeon's Stuff */
 /*Send post request*/
-function sendData(key, value) {
+function sendData(key, value, id) {
     var data = new FormData();
     data.append(key, value);
     console.log(data);
@@ -73,7 +72,12 @@ function sendData(key, value) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://localhost:5000/query', true);
     xhr.onload = function () {
+        let response = JSON.parse(this.responseText)
         console.log(this.responseText);
+        console.log(response)
+        console.log(response['output'])
+
+        $(id).text(response['output']);
     };
     xhr.send(data);
 }
@@ -114,6 +118,12 @@ function addEditBtn() {
     cellInstruction.appendChild(button);
 }
 
+function submitCustomQuery() {
+    let selection = document.getElementById("userCustomQuery").innerHTML
+    console.log(selection)
+    sendData(queryType, selection, "span.resultCustomQuery")
+}
+
 var option1Button = document.getElementById('option1');
 var option1Button = document.getElementById('option2');
 var option1Button = document.getElementById('option3');
@@ -129,5 +139,5 @@ option1.addEventListener('click',
     queryType = "elaborate"
 );
 option1.addEventListener('click', 
-    queryType = "custum"
+    queryType = "custom"
 );

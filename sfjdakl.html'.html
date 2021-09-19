@@ -13,9 +13,9 @@
 <body>
 
 <div class='heading-div'>
-<!--    <div class="col-lg">-->
-        <h2 class="heading">study~flow</h2>
-<!--    </div>-->
+    <!--    <div class="col-lg">-->
+    <h2 class="heading">study~flow</h2>
+    <!--    </div>-->
 </div>
 <div class="container-fluid vh-100 main-content">
     <div class="row align-items-center">
@@ -30,7 +30,7 @@
             <input id="userCustomFileName" type="text" class="form-control" placeholder="Set filename" aria-label="File name" aria-describedby="basic-addon1">
         </div>
         <div class="col">
-            <button class="btn btn-secondary" onclick="loadFile()" id ="add-btn">Add File</button>
+            <button class="btn btn-secondary" onclick="loadFile()">Add File</button>
         </div>
     </div>
 
@@ -40,8 +40,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-2 mx-auto form-table" id="customButtons" style="width: 10%; height: 79%; float: left; background:silver;">
-            <table id="myTable"></table>
+        <div class="col-2 mx-auto">
+            <button>Some</button>
+            <button>Some</button>
+            <button>Some</button>
         </div>
         <div class="col-8 mx-auto">
             <div id='text-container'>
@@ -60,33 +62,8 @@
                 </label>
                 <br>
                 <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option3" autocomplete="off"> Define
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Paraphrase
                 </label>
-                <br>
-                <label class="btn btn-secondary">
-                    <input type="radio" name="options" id="option4" autocomplete="off" data-toggle="collapse" data-target=".multi-collapse" aria-expanded="false" aria-controls="multiCollapseExample1 multiCollapseExample2"> Custom Query
-                </label>
-            </div>
-            <div class="row">
-                <div class="col mx-auto">
-                    <div class="collapse multi-collapse" id="multiCollapseExample1">
-                        <label class="custom-query-label">Enter Query</label>
-                        <span id="userCustomQuery" class="card card-body custom-query" contentEditable="true">
-                            How far away is Saturn?
-                        </span>
-                        <button class="btn btn-secondary" onclick="submitCustomQuery()">Submit</button>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-            <div class="col mx-auto">
-                    <div class="collapse multi-collapse" id="multiCollapseExample2">
-                        <label class="custom-query-label">Query Result</label>
-                        <span id="resultCustomQuery" class="card card-body custom-query">
-                            Submit a question
-                        </span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
