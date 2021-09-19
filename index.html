@@ -8,15 +8,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-
 <div class='heading-div'>
-<!--    <div class="col-lg">-->
         <h2 class="heading">study~flow</h2>
-<!--    </div>-->
 </div>
+<span id="divider"></span>
 <div class="container-fluid vh-100 main-content">
     <div class="row align-items-center">
         <div class="col">
@@ -33,14 +34,14 @@
             <button class="btn btn-secondary" onclick="loadFile()" id ="add-btn">Add File</button>
         </div>
     </div>
-
     <div class="row">
-        <div class="col">
-            <h3 for="text-box">Text file</h3>
+        <div class="col-2">
+            <br>
+<!--            <h3 for="text-box">Open Files</h3>-->
         </div>
     </div>
     <div class="row">
-        <div class="col-2 mx-auto form-table" id="customButtons" style="width: 10%; height: 79%; float: left; background:silver;">
+        <div class="col-2 mx-auto form-table" id="customButtons">
             <table id="myTable"></table>
         </div>
         <div class="col-8 mx-auto">
@@ -80,7 +81,7 @@
             </div>
             <div class="row">
             <div class="col mx-auto">
-                    <div class="collapse multi-collapse" id="multiCollapseExample2">
+                    <div>
                         <label class="custom-query-label">Query Result</label>
                         <span id="resultCustomQuery" class="card card-body custom-query">
                             Submit a question
