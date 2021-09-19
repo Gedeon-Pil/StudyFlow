@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>StudyFlow</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+
+<div class='heading-div'>
+    <!--    <div class="col-lg">-->
+    <h2 class="heading">study~flow</h2>
+    <!--    </div>-->
+</div>
+<div class="container-fluid vh-100 main-content">
+    <div class="row align-items-center">
+        <div class="col">
+            <div class="p-3 hidden"></div>
+        </div>
+        <div class="col-4">
+            <input type="file" class="custom-file-input" id="customFile" name="filename" accept=".txt">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+        <div class="col-4">
+            <input id="userCustomFileName" type="text" class="form-control" placeholder="Set filename" aria-label="File name" aria-describedby="basic-addon1">
+        </div>
+        <div class="col">
+            <button class="btn btn-secondary" onclick="loadFile()">Add File</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h3 for="text-box">Text file</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 mx-auto">
+            <button>Some</button>
+            <button>Some</button>
+            <button>Some</button>
+        </div>
+        <div class="col-8 mx-auto">
+            <div id='text-container'>
+                <div id="text-box" name="text_box"></div>
+                <span class="popup-tag"></span>
+            </div>
+        </div>
+        <div class="col-2 mx-auto">
+            <div class="btn-group btn-group-toggle btn-group-vertical mx-auto" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked> Summarize
+                </label>
+                <br>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option2" autocomplete="off"> Elaborate
+                </label>
+                <br>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option3" autocomplete="off"> Paraphrase
+                </label>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="index.js"></script>
+</body>
+</html>
+

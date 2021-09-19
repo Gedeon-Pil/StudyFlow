@@ -43,39 +43,40 @@ function getSelected() {
 }
 /* create sniffer */
 $(document).ready(function() {
-    $('#text-box').mouseup(function(event) {
+    $('#text-box').mouseup(async function (event) {
         console.log($(document.getElementById('text-box')).height())
         console.log($('text-box').height())
 
         var selection = getSelected();
         selection = $.trim(selection);
-        if(selection != ''){
-            $("span.popup-tag").css("display","block");
-            $("span.popup-tag").css("top",event.clientY/2);
-            $("span.popup-tag").css("left",event.clientX/2);
-            $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width()/2);
-            $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height()/2);
+        if (selection != '') {
+            $("span.popup-tag").css("display", "block");
+            $("span.popup-tag").css("top", event.clientY / 2);
+            $("span.popup-tag").css("left", event.clientX / 2);
+            $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width() / 2);
+            $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height() / 2);
             // console.log(sendData(queryType, selection))
-            $("span.popup-tag").text(sendData(queryType, selection)['output']);
-        }else{
-            $("span.popup-tag").css("display","none");
+            $("span.popup-tag").text(await sendData(queryType, selection)['output']);
+        } else {
+            $("span.popup-tag").css("display", "none");
         }
     });
 });
 
 /* Gedeon's Stuff */
 /*Send post request*/
-function sendData(key, value) {
+async function sendData(key, value) {
     var data = new FormData();
     data.append(key, value);
     console.log(data);
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:5000/query', true);
-    xhr.onload = function () {
-        console.log(this.responseText);
-    };
-    xhr.send(data);
+    // var xhr = new XMLHttpRequest();
+    // xhr.open('POST', 'http://localhost:5000/query', true);
+    // xhr.onload = function () {
+    //     console.log(this.responseText);
+    // };
+    // xhr.send(data);
+    return await makeRequest(data)
 }
 
 /*Add file*/ 
@@ -131,3 +132,27 @@ option1.addEventListener('click',
 option1.addEventListener('click', 
     queryType = "custum"
 );
+
+function makeRequest(data) {
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', 'http://localhost:5000/query');
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send(data);
+    });
+}
