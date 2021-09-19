@@ -24,7 +24,9 @@ def summarize():
     print("The text received is: " + requestBody['text'])
     r = summarizeTextHelper(requestBody['text'])
     print(r.text)
-    return Response("The summarized text is " + r.text)
+    response = Response("The summarized text is " + r.text)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
 
 
 @app.route('/askQuestion', methods=['POST'])

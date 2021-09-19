@@ -55,6 +55,7 @@ $(document).ready(function() {
 function sendData(string) {
     var data = new FormData();
     data.append('text', string);
+    console.log(data);
 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'http://localhost:5000/summarization', true);
