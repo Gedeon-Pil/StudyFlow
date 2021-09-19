@@ -70,7 +70,7 @@ function sendData(key, value) {
     console.log("Sending request with action: " + key);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://mitosborn.pythonanywhere.com/query', true);
+    xhr.open('POST', 'https://mitosborn.pythonanywhere.com/query', true);
     xhr.onload = function () 
     {
         let response = this.responseText
