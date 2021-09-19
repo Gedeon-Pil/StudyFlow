@@ -37,12 +37,12 @@ class GoogleScraper:
             chromeOptions.add_argument(self.HEADLESS_FLAG)
         chromeDriverPath = self.getCorrectChromeDriverPath()
         self.driver = webdriver.Chrome(chromeDriverPath, options=chromeOptions)
-        self.driver.implicitly_wait(self.DRIVER_WAIT_TIME)
 
 
     def getGoogleResult(self, query):
         print("Getting Google result for query: " + query)
         self.driver.get(self.GOOGLE_SEARCH_ENDPOINT + query)
+        time.sleep(self.DRIVER_WAIT_TIME)
         for className in self.GOOGLE_RESULT_CLASS_NAMES:
             foundElem = self.parseGoogleEndorsedResults(className)
             if (foundElem):
@@ -51,26 +51,26 @@ class GoogleScraper:
 
     def parseGoogleEndorsedResults(self, className):
         try:
-            print("Checking query against class name " + className)
             foundElem = self.driver.find_element_by_class_name(className)
             print("Found elem for class name " + className)
             allText = foundElem.text
             for elem in foundElem.find_elements_by_xpath(".//*"):
-                print("Child found")
                 allText += elem.text
             return allText
         except Exception as e:
-            print(e)
             return False
 
 
     def getBestResult(self, query):
         print("Getting best result for query: " + query)
         self.driver.get(self.GOOGLE_SEARCH_ENDPOINT + query)
+        time.sleep(self.DRIVER_WAIT_TIME)
         outerElem = self.driver.find_element_by_class_name(self.FIRST_LINK_CLASS_NAME)
+        time.sleep(self.DRIVER_WAIT_TIME)
         link = outerElem.find_element_by_tag_name("a").get_attribute("href")
         textToSummarize = ""
         try:
+            time.sleep(self.DRIVER_WAIT_TIME)
             self.driver.get(link)
             print("Successfully navigated to main article")
             allParagraphs = self.driver.find_elements_by_css_selector("p")
@@ -82,10 +82,6 @@ class GoogleScraper:
         return summarizeTextHelper(textToSummarize)
 
 
-    def shutDown(self):
-        self.driver.quit()
-
-
     def getCorrectChromeDriverPath(self):
         if self.PLATFORM_NAME == "Darwin":
             return os.path.join(self.DIR_NAME, "chromedriver-macOS")
@@ -94,13 +90,17 @@ class GoogleScraper:
         raise Exception("There is only chromedriver support of Mac and Windows")
 
 
+    def shutDown(self):
+        self.driver.quit()
+
+
 googleScraper = GoogleScraper()
 app = Flask(__name__)
 
 
 @app.route('/', methods=['GET'])
 def index():
-    return generateResponse("The flask server is up and running!")
+    return generateResponse("The flask server is up and running!", 200)
 
 
 @app.route('/query', methods=['POST'])
@@ -108,35 +108,38 @@ def summarize():
     requestBody = request.form.to_dict()
     if len(requestBody) != 1:
         print("Form data should have exactly one key-value pair")
-        return generateResponse(404, "Form data should only have one key-value pair")
+        return generateResponse("Form data should only have one key-value pair", 404)
     return handleQueryRequest(*requestBody.popitem())
 
 
 def handleQueryRequest(action, query):
     if action == "summarize":
-        return generateResponse(200, summarizeTextHelper(query))
+        return generateResponse(summarizeTextHelper(query), 200)
     elif action == "define":
-        return generateResponse(200, getDefinitionHelper(query))
+        return generateResponse(getDefinitionHelper(query), 200)
     elif action == "elaborate":
-        return generateResponse(200, googleScraper.getBestResult(query), True)
+        return generateResponse(googleScraper.getBestResult(query), 200, True)
     elif action == "custom":
         googleResults = googleScraper.getGoogleResult(query)
         if googleResults:
-            return generateResponse(200, googleResults)
-        return generateResponse(200, googleScraper.getBestResult(query), True)
+            return generateResponse(googleResults, 200)
+        return generateResponse(googleScraper.getBestResult(query), True)
     else:
-        return generateResponse(404, "Did not recognize form-data key: " + key)
+        return generateResponse("Did not recognize form-data key: " + key, 404)
 
 
 def summarizeTextHelper(text):
-    r = requests.post(
+    response = requests.post(
         "https://api.deepai.org/api/summarization",
         files={
             'text': text,
         },
         headers={'api-key': '62fe45ec-ddc4-4c46-b066-8601a1824018'}
     )
-    return json.loads(r.text)["output"]
+    jsonResponse = json.loads(response.text)
+    if "output" in jsonResponse and jsonResponse["output"] != "":
+        return jsonResponse["output"]
+    return "Not enough text to summarize."
 
 
 def getDefinitionHelper(word):
@@ -150,11 +153,8 @@ def getDefinitionHelper(word):
         topDefinitions.append(setFirstUppercase(partOfSpeech) + ": " + setFirstUppercase(definition))
     return "\n".join(topDefinitions)
 
-def setFirstUppercase(s):
-    return s[0].upper() + s[1:]
 
-
-def generateResponse(statusCode, text, cleanUp=False):
+def generateResponse(text, statusCode, cleanUp=False):
     if cleanUp:
         text = cleanUpResponse(text)
     response = Response(status=statusCode, response=text)
@@ -164,11 +164,11 @@ def generateResponse(statusCode, text, cleanUp=False):
 
 
 def cleanUpResponse(text, maxSentences=5, minSentenceLength=30):
-    delimiters = [".", "?", "!"]
+    punctuationMarks = {".", "?", "!"}
     newText = ""
-    for index in range(len(text)):
-        newText += text[index]
-        if text[index] in delimiters:
+    for char in text:
+        newText += char
+        if char in punctuationMarks:
             newText += " "
     text = " ".join(newText.split())
 
@@ -178,7 +178,7 @@ def cleanUpResponse(text, maxSentences=5, minSentenceLength=30):
     textLength = len(text)
     textResult = ""
     while index < textLength:
-        if text[index] in delimiters:
+        if text[index] in punctuationMarks:
             if index - prevIndex >= minSentenceLength:
                 sentenceCount += 1
                 textResult += text[prevIndex:index + 1]
@@ -190,6 +190,10 @@ def cleanUpResponse(text, maxSentences=5, minSentenceLength=30):
     if sentenceCount < 5:
         textResult += text[prevIndex:]
     return textResult
+
+
+def setFirstUppercase(s):
+    return s[0].upper() + s[1:]
 
 
 if __name__ == '__main__':
