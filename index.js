@@ -5,6 +5,7 @@ let fileLoaded;
 let fileText;
 let fileName;
 let customName;
+let queryType;
 
 function loadFile() {
     customName = document.getElementById('userCustomFileName').value;
@@ -54,8 +55,8 @@ $(document).ready(function() {
             $("span.popup-tag").css("left",event.clientX/2);
             $("span.popup-tag").css("max-width", $(document.getElementById('text-box')).width()/2);
             $("span.popup-tag").css("max-height", $(document.getElementById('text-box')).height()/2);
-            console.log(sendData(selection))
-            $("span.popup-tag").text(selection);
+            // console.log(sendData(queryType, selection))
+            $("span.popup-tag").text(sendData(queryType, selection)['output']);
         }else{
             $("span.popup-tag").css("display","none");
         }
@@ -63,13 +64,14 @@ $(document).ready(function() {
 });
 
 /* Gedeon's Stuff */
-function sendData(string) {
+/*Send post request*/
+function sendData(key, value) {
     var data = new FormData();
-    data.append('text', string);
+    data.append(key, value);
     console.log(data);
 
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://localhost:5000/summarization', true);
+    xhr.open('POST', 'http://localhost:5000/query', true);
     xhr.onload = function () {
         console.log(this.responseText);
     };
@@ -111,4 +113,21 @@ function addEditBtn() {
     button.appendChild(remove);
     cellInstruction.appendChild(button);
 }
- 
+
+var option1Button = document.getElementById('option1');
+var option1Button = document.getElementById('option2');
+var option1Button = document.getElementById('option3');
+var option1Button = document.getElementById('option4');
+
+option1.addEventListener('click', 
+    queryType = "summarize"
+);
+option2.addEventListener('click', 
+    queryType = "define"
+);
+option1.addEventListener('click', 
+    queryType = "elaborate"
+);
+option1.addEventListener('click', 
+    queryType = "custum"
+);

@@ -24,7 +24,7 @@ class GoogleScraper:
     GOOGLE_SEARCH_ENDPOINT = "https://www.google.com/search?q="
 
 
-    def __init__(self, chromeDriverPath=os.path.join(dirname, "chromedriver-macOS"), maximized=True, headless=False):
+    def __init__(self, chromeDriverPath=os.path.join(dirname, "chromedriver.exe"), maximized=True, headless=False):
         print("Chromedriver path is: " + chromeDriverPath)
         chromeOptions = Options()
         if maximized:
@@ -98,6 +98,7 @@ def summarize():
     requestBody = request.form.to_dict()
     print(requestBody)
     if len(requestBody) != 1:
+        print("Form data should only have one key-value pair")
         return Response(status=404, response="Form data should only have one key-value pair")
     return handleQueryRequest(*requestBody.popitem())
 
@@ -118,6 +119,7 @@ def handleQueryRequest(action, query):
             return generateResponse(googleResults)
         return generateResponse(googleScraper.getBestResult(query))
     else:
+        print("Did not recognize form-data key: " + key)
         return Response(status=404, body="Did not recognize form-data key: " + key)
 
 
