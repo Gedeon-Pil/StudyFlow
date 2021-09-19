@@ -71,7 +71,7 @@ def summarize():
     print(r.text)
     response = Response("The summarized text is " + r.text)
     response.headers["Access-Control-Allow-Origin"] = "*"
-    return Response("The summarized text is " + r.text)
+    return response
 
 
 @app.route('/askQuestion', methods=['POST'])
