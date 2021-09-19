@@ -18,14 +18,31 @@
             <h2 class="heading">study~flow</h2>
         </div>
     </div>
-    <div class="row">
-        <div class="col-8 mx-auto">
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" id="customFile" name="filename" accept=".txt">
-                    <label class="custom-file-label" for="customFile">Choose file</label>
-                </div>
+<!--    <div class="row">-->
+<!--        <div class="col-8 mx-auto">-->
+<!--                <div class="custom-file">-->
+<!--                    <input type="file" class="custom-file-input" id="customFile" name="filename" accept=".txt">-->
+<!--                    <label class="custom-file-label" for="customFile">Choose file</label>-->
+<!--                </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <div class="row align-items-center">
+        <div class="col">
+            <div class="p-3 hidden"></div>
+        </div>
+        <div class="col-4">
+            <input type="file" class="custom-file-input" id="customFile" name="filename" accept=".txt">
+            <label class="custom-file-label" for="customFile">Choose file</label>
+        </div>
+        <div class="col-4">
+            <input type="text" class="form-control" placeholder="Set filename" aria-label="File name" aria-describedby="basic-addon1">
+        </div>
+        <div class="col">
+            <button class="btn btn-secondary">Add File</button>
         </div>
     </div>
+
     <div class="row">
         <div class="col">
             <h3 for="text-box">Text file</h3>
