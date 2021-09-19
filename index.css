@@ -52,6 +52,7 @@ h3 {
     overflow: scroll;
     height: 150px;
     margin-bottom: 10px;
+    font-size: 11px;
 }
 
 .custom-query-label {
