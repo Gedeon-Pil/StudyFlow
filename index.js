@@ -2,20 +2,23 @@
 //     document.getElementById('customFile')
 // }
 let fileLoaded;
+let fileText;
 let fileName;
+let customName;
 
 function loadFile() {
-    let reader = new FileReader();
-    reader.addEventListener('load', (event) => {
-        document.getElementById('text-box').innerHTML = event.target.result;
-    })
-    reader.readAsText(fileLoaded);
-    let customName = document.getElementById('userCustomFileName').value;
+    customName = document.getElementById('userCustomFileName').value;
     console.log(customName)
     if(customName == ''){
         customName = fileName;
     }
-
+    let reader = new FileReader();
+    reader.addEventListener('load', (event) => {
+        fileText = event.target.result;
+        document.getElementById('text-box').innerHTML = fileText;
+        addEditBtn();
+    })
+    reader.readAsText(fileLoaded);
 }
 
 
@@ -59,7 +62,7 @@ $(document).ready(function() {
     });
 });
 
-
+/* Gedeon's Stuff */
 function sendData(string) {
     var data = new FormData();
     data.append('text', string);
@@ -72,3 +75,40 @@ function sendData(string) {
     };
     xhr.send(data);
 }
+
+/*Add file*/ 
+var addBtn = document.getElementById('add-btn');
+var fileContentsDict = {};
+ 
+function addEditBtn() {
+    var table = document.getElementById("myTable");
+    var row = table.insertRow(-1);
+    var cellInstruction = row.insertCell(-1);
+    var button = document.createElement('button');
+    var remove = document.createElement('button');
+    button.setAttribute('class', 'btn btn-secondary');
+    button.setAttribute('type', 'button');
+    button.innerHTML = customName; // Make the custom name the button name
+    button.setAttribute('name', customName);
+
+    // Add filename: filecontents to dictionary
+    fileContentsDict[customName] = fileText;
+    console.log(fileContentsDict);
+
+    // Add event listener that changes contents in view
+    button.addEventListener('click', (event) => {
+        document.getElementById('text-box').innerHTML = fileContentsDict[event.target.name];
+    });
+
+    remove.setAttribute('style', 'background-color: red');
+    remove.addEventListener('click', function(e) {
+        //Remove filename:filecontents from dictionary
+        delete fileContentsDict[e.currentTarget.parentNode.name];
+        e.currentTarget.parentNode.remove();
+        document.getElementById('text-box').innerHTML = "";
+    }, false);
+    remove.innerHTML = "X";
+    button.appendChild(remove);
+    cellInstruction.appendChild(button);
+}
+ 

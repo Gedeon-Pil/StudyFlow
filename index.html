@@ -39,7 +39,7 @@
             <input id="userCustomFileName" type="text" class="form-control" placeholder="Set filename" aria-label="File name" aria-describedby="basic-addon1">
         </div>
         <div class="col">
-            <button class="btn btn-secondary" onclick="loadFile()">Add File</button>
+            <button class="btn btn-secondary" onclick="loadFile()" id ="add-btn">Add File</button>
         </div>
     </div>
 
@@ -49,10 +49,8 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-2 mx-auto">
-            <button>Some</button>
-            <button>Some</button>
-            <button>Some</button>
+        <div class="form-table" id="customButtons" style="width: 10%; height: 79%; float: left; background:grey;">
+            <table id="myTable"></table>
         </div>
         <div class="col-8 mx-auto">
             <div id='text-container'>
