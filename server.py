@@ -13,31 +13,61 @@ import time
 dirname = os.path.dirname(__file__)
 
 
-class QuestionScraper:
+class GoogleScraper:
 
-    firstLinkClass = "yuRUbf"
+    # Constants
+    FIRST_LINK_CLASS_NAME = "yuRUbf"
+    DRIVER_WAIT_TIME = 0.2
+    MAXIMIZE_FLAG = "--kiosk"
+    HEADLESS_FLAG = "--headless"
+    GOOGLE_RESULT_CLASS_NAMES = ["Z0LcW XcVN5d", "FLP8od", "IZ6rdc", "zCubwf"]
+    GOOGLE_SEARCH_ENDPOINT = "https://www.google.com/search?q="
 
-    def __init__(self, chromeDriverPath="/Users/mark/Documents/Rice/Junior - Fall/HackRice 11/StudyFlow/chromedriver-macOS", maximized=True, headless=False):
+
+    def __init__(self, chromeDriverPath=os.path.join(dirname, "chromedriver-macOS"), maximized=True, headless=False):
+        print("Chromedriver path is: " + chromeDriverPath)
         chromeOptions = Options()
         if maximized:
-            chromeOptions.add_argument("--kiosk")
+            chromeOptions.add_argument(self.MAXIMIZE_FLAG)
         if headless:
-            chromeOptions.add_argument("--headless")
+            chromeOptions.add_argument(self.HEADLESS_FLAG)
         self.driver = webdriver.Chrome(chromeDriverPath, options=chromeOptions)
-        self.driver.implicitly_wait(0.3)
+        self.driver.implicitly_wait(self.DRIVER_WAIT_TIME)
 
-    def search(self, question):
-        print("Making search on question: " + question)
-        self.driver.get("https://www.google.com/search?q=" + question)
-        outerElem = self.driver.find_element_by_class_name(self.firstLinkClass)
-        print("Found outer element: " + str(outerElem))
+
+    def getGoogleResult(self, query):
+        print("Getting Google result for query: " + query)
+        self.driver.get(self.GOOGLE_SEARCH_ENDPOINT + query)
+        for className in self.GOOGLE_RESULT_CLASS_NAMES:
+            foundElem = self.parseGoogleEndorsedResults(className)
+            if (foundElem):
+                return foundElem
+        return False
+
+    def parseGoogleEndorsedResults(self, className):
+        try:
+            print("Checking query against class name " + className)
+            foundElem = self.driver.find_element_by_class_name(className)
+            print("Success for class name")
+            allText = ""
+            for elem in foundElem.find_element_by_tag_name("*"):
+                allText += elem.innerHTML
+            print()
+            return " ".join(allText.split())
+        except Exception:
+            return False
+
+
+    def getBestResult(self, query):
+        print("Getting best result for query: " + query)
+        self.driver.get(self.GOOGLE_SEARCH_ENDPOINT + query)
+        outerElem = self.driver.find_element_by_class_name(self.FIRST_LINK_CLASS_NAME)
         link = outerElem.find_element_by_tag_name("a").get_attribute("href")
-        textToSummarize = ""
+        textToSummarize = str()
         try:
             self.driver.get(link)
             print("Successfully navigated to main article")
             allParagraphs = self.driver.find_elements_by_css_selector("p")
-            print("Printing all paragraph text:\n")
             for par in allParagraphs:
                 if (len(par.text) > 30):
                     textToSummarize += par.text
@@ -46,9 +76,11 @@ class QuestionScraper:
             pass
         return summarizeTextHelper(" ".join(textToSummarize.split()))
 
+    def shutDown(self):
+        self.driver.quit()
 
-questionScraper = QuestionScraper(headless=True)
 
+googleScraper = GoogleScraper(headless=True)
 app = Flask(__name__)
 
 @app.before_first_request
@@ -58,32 +90,35 @@ def doSomething():
 
 @app.route('/', methods=['GET'])
 def index():
-    return "Example response"
+    return generateResponse("The flask server is up and running!")
 
 
-@app.route('/summarization', methods=['POST'])
+@app.route('/query', methods=['POST'])
 def summarize():
-    requestBody = request.form
-    if 'text' not in requestBody:
-        return Response(status=404, body="No text was sent in the request body")
-    print("The text received is: " + requestBody['text'])
-    r = summarizeTextHelper(requestBody['text'])
-    print(r.text)
-    response = Response("The summarized text is " + r.text)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
+    requestBody = request.form.to_dict()
+    print(requestBody)
+    if len(requestBody) != 1:
+        return Response(status=404, response="Form data should only have one key-value pair")
+    return handleQueryRequest(*requestBody.popitem())
 
 
-@app.route('/askQuestion', methods=['POST'])
-def askQuestion():
-    requestBody = request.form
-    if 'question' not in requestBody:
-        return Response(status=404, body="No text was sent in the request body")
-    r = questionScraper.search(requestBody['question'])
-    print(r.text)
-    response = Response("The answer to the question is " + r.text)
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    return response
+def handleQueryRequest(action, query):
+    if action == "summarize":
+        summarizeResults = summarizeTextHelper(query)
+        return generateResponse(summarizeResults)
+    elif action == "define":
+        # Call Meriam-Webster API
+        return generateResponse("Definition API is not yet implemented")
+    elif action == "elaborate":
+        elaborateResults = googleScraper.getBestResult(query)
+        return generateResponse(elaborateResults)
+    elif action == "custom":
+        googleResults = googleScraper.getGoogleResult(query)
+        if googleResults:
+            return generateResponse(googleResults)
+        return generateResponse(googleScraper.getBestResult(query))
+    else:
+        return Response(status=404, body="Did not recognize form-data key: " + key)
 
 
 def summarizeTextHelper(text):
@@ -94,6 +129,11 @@ def summarizeTextHelper(text):
         },
         headers={'api-key': '62fe45ec-ddc4-4c46-b066-8601a1824018'}
     )
+
+def generateResponse(msg):
+    response = Response(msg)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    return response
 
 
 if __name__ == '__main__':
