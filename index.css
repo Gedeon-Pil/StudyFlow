@@ -23,6 +23,15 @@ body {
     text-align: center;
 }
 
+.heading-div {
+    background-color:black;
+}
+
+.main-content {
+    background-color:silver;
+    padding:10px;
+    }
+
 
 #text-box {
     background-color: white;
