@@ -1,22 +1,30 @@
 // function onLoad() {
 //     document.getElementById('customFile')
 // }
+let fileLoaded;
+let fileName;
 
 function loadFile() {
-    console.log("Loaded file");
+    let reader = new FileReader();
+    reader.addEventListener('load', (event) => {
+        document.getElementById('text-box').innerHTML = event.target.result;
+    })
+    reader.readAsText(fileLoaded);
+    let customName = document.getElementById('userCustomFileName').value;
+    console.log(customName)
+    if(customName == ''){
+        customName = fileName;
+    }
+
 }
 
 
 // Add the following code if you want the name of the file appear on select
 $(".custom-file-input").on("change", function(evt) {
-    var fileName = $(this).val().split("\\").pop();
+    fileName = $(this).val().split("\\").pop();
     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     console.log($(this).val());
-    var reader = new FileReader();
-    reader.addEventListener('load', (event) => {
-        document.getElementById('text-box').innerHTML = event.target.result;
-    })
-    reader.readAsText(evt.target.files[0]);
+    fileLoaded = evt.target.files[0];
 });
 
 function getSelected() {
