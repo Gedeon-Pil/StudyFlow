@@ -123,7 +123,7 @@ def handleQueryRequest(action, query):
         googleResults = googleScraper.getGoogleResult(query)
         if googleResults:
             return generateResponse(googleResults, 200)
-        return generateResponse(googleScraper.getBestResult(query), True)
+        return generateResponse(googleScraper.getBestResult(query), 200, True)
     else:
         return generateResponse("Did not recognize form-data key: " + key, 404)
 
